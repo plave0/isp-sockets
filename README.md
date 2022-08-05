@@ -2,4 +2,4 @@
 
 > **Note**
 > 
-> All instructions and materials are written in Srbian.
+> All instructions and materials are written in Serbian.
