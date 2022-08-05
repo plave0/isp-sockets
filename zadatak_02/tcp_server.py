@@ -7,11 +7,13 @@ if len(sys.argv) < 2:
 
 LISTEN_ADDR = sys.argv[1]
 
-while True:
-    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 
-    s.bind((LISTEN_ADDR, 1234))
+s.bind((LISTEN_ADDR, 1234))
+
+while True:
+
     s.listen(5)
 
     clientsocket, address = s.accept()
@@ -28,5 +30,5 @@ while True:
             print(f"Client message: {msg.decode('utf-8')}")
             clientsocket.sendall(bytes("Message received", "utf-8"))
 
-    s.close()
+    clientsocket.close()
 
