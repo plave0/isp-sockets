@@ -1,6 +1,5 @@
 import socket
 import sys
-import time
 
 if len(sys.argv) < 2:
     exit(1)
@@ -21,14 +20,10 @@ while True:
 
         print(f"Client connected: {address}")
 
-        msg = ""
-        while True:
-            msg = clientsocket.recv(1024)
-            if not msg:
-                time.sleep(3)
-                break
-            print(f"Client message: {msg.decode('utf-8')}")
-            clientsocket.sendall(bytes("Message received", "utf-8"))
+        msg = clientsocket.recv(1024)
+        print(f"Client message: {msg.decode('utf-8')}")
+
+        clientsocket.sendall(bytes("Message received", "utf-8"))
 
     clientsocket.close()
 
