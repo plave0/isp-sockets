@@ -5,7 +5,6 @@ if len(sys.argv) < 2:
     exit(1)
 
 SERVER_ADDR = sys.argv[1]
-print(SERVER_ADDR)
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.connect((SERVER_ADDR, 1234))
