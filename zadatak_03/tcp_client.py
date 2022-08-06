@@ -56,5 +56,5 @@ while not conn_ended:
             sel.unregister(serversocket)
             serversocket.close()
 
-            comm_ended = True
+            conn_ended = True
 
