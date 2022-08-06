@@ -6,7 +6,7 @@ if len(sys.argv) < 3:
     exit(1)
 
 SERVER_ADDR = sys.argv[1]
-SERVER_PORT = sys.argv[2]
+SERVER_PORT = int(sys.argv[2])
 
 # Initialize socket to server
 

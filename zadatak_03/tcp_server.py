@@ -1,6 +1,5 @@
 import socket
-import selectors
-import sys
+import selectors import sys
 import types
 
 if len(sys.argv) < 3:
