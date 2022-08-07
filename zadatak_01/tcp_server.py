@@ -16,11 +16,20 @@ listen_socket.bind((LISTEN_ADDR, LISTEN_PORT))
 
 # Main server loop
 
-while True:
+server_running = True
+while server_running:
 
-    listen_socket.listen(5)
+    try:
 
-    client_socket, address = listen_socket.accept()
+        listen_socket.listen()
+        client_socket, address = listen_socket.accept()
+
+    except KeyboardInterrupt:
+
+        print("Exiting server...")
+        server_running = False
+        continue
+
     print(f"Client connected: {address}")
 
     client_socket.send(bytes("Dobrodosao na server!", "utf-8"))
