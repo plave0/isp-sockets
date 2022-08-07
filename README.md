@@ -4,6 +4,8 @@
 > 
 > All instructions and materials are written in Serbian.
 
+## Zadaci sa radionice
+
 1.zadatak: Napisati TCP server i TCP klijenta sa sledećim funkcionalnostima:
  - TCP server: Prima konekcije sve dok ne prekinemo izvršavanje programa. Kada primi konekciju od strane nekog klijenta, šalje mu poruku, a zatim zatvara konekciju.
  - TCP klijent: Uspostavlja vezu sa serverom, a zatim prima poruku od servera i ispisije je na standardni izlaz.
