@@ -27,6 +27,8 @@ while server_running:
     except KeyboardInterrupt:
 
         print("Exiting server...")
+
+        listen_socket.close()
         server_running = False
         continue
 
