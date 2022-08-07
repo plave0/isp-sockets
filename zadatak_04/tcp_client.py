@@ -23,12 +23,16 @@ data = types.SimpleNamespace(header_sent=False,
 sel = selectors.DefaultSelector()
 sel.register(s, selectors.EVENT_WRITE, data)
 
-with open("test.JPG", "rb") as img_file:
+print("Input image path:")
+img_path = input()
+
+print("Input image title:")
+img_title = input()
+
+with open(img_path, "rb") as img_file:
     img_string = img_file.read()
 
-img_title = "Pavle Ciric"
-payload = img_title.encode('utf-8') + img_string
-
+payload = img_title.encode("utf-8") + img_string
 # Main client loop
 
 conn_ended = False
