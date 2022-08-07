@@ -1,15 +1,17 @@
 import socket
 import sys
 
-if len(sys.argv) < 2:
+if len(sys.argv) < 3:
     exit(1)
 
 SERVER_ADDR = sys.argv[1]
+PORT = int(sys.argv[2])
 
-s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-s.connect((SERVER_ADDR, 1234))
+# Connecting to the server
+server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+server_socket.connect((SERVER_ADDR, PORT))
 
-msg = s.recv(1024)
+# Recieve message form server
+msg = server_socket.recv(1024)
 print(msg.decode("utf-8"))
-# new_msg = input()
-# s.send(bytes(new_msg, "utf-8"))
+
