@@ -83,4 +83,5 @@ while server_running:
                 print(f"Connection ended: {data.addr}") 
 
                 sel.unregister(client_socket)
+                client_socket.close()
 
