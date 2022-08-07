@@ -11,9 +11,9 @@ SERVER_PORT = int(sys.argv[2])
 
 # Initialize socket to server
 
-s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-s.setblocking(False)
-s.connect_ex((SERVER_ADDR, SERVER_PORT))
+server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+server_socket.setblocking(False)
+server_socket.connect_ex((SERVER_ADDR, SERVER_PORT))
 
 # Initialize selector
 
@@ -21,7 +21,7 @@ data = types.SimpleNamespace(header_sent=False,
                              content_sent_len=0)
 
 sel = selectors.DefaultSelector()
-sel.register(s, selectors.EVENT_WRITE, data)
+sel.register(server_socket, selectors.EVENT_WRITE, data)
 
 print("Input image path:")
 img_path = input()
@@ -42,13 +42,17 @@ while not conn_ended:
     try:
         events = sel.select(timeout=None) 
     except KeyboardInterrupt:
+
+        sel.unregister(server_socket)
+        server_socket.close()
+
         conn_ended = True
         continue
     
     # When event is registered
     for key, mask in events:
         
-        serversocket = key.fileobj
+        server_socket = key.fileobj
         data = key.data
 
         if mask & selectors.EVENT_READ:
@@ -61,7 +65,7 @@ while not conn_ended:
             if not data.header_sent:
 
                 header = f"{len(img_title):<8}{len(img_string):<8}"
-                serversocket.sendall(header.encode("utf-8"))
+                server_socket.sendall(header.encode("utf-8"))
 
                 data.header_sent = True
 
@@ -69,7 +73,7 @@ while not conn_ended:
                 
                 if data.content_sent_len < len(payload):
 
-                    sent_len = serversocket.send(payload[data.content_sent_len:])
+                    sent_len = server_socket.send(payload[data.content_sent_len:])
                     data.content_sent_len += sent_len
 
                 else:
@@ -81,10 +85,8 @@ while not conn_ended:
 
         if mask & selectors.EVENT_READ:
 
-            server_msg = serversocket.recv(1024)
+            server_msg = server_socket.recv(1024)
             print(f"Server message: {server_msg.decode('utf-8')}")
 
             conn_ended = True
 
-sel.unregister(s)
-s.close()
