@@ -30,8 +30,16 @@ while server_running:
    
     # Waiting for an event or terminate server
     try:
+
         events = sel.select(timeout=None)
+
     except KeyboardInterrupt:
+
+        print("Exiting server...")
+    
+        sel.unregister(listen_socket)
+        listen_socket.close()
+
         server_running = False
         continue
 
@@ -42,11 +50,11 @@ while server_running:
 
             # Accepting the connection
 
-            clientsocket, address = listen_socket.accept()
-            clientsocket.setblocking(False)
+            client_socket, address = listen_socket.accept()
+            client_socket.setblocking(False)
 
             data = types.SimpleNamespace(addr=address)
-            sel.register(clientsocket, selectors.EVENT_READ, data=data)
+            sel.register(client_socket, selectors.EVENT_READ, data=data)
 
             print(f"Client connected: {address}") 
             
@@ -54,7 +62,7 @@ while server_running:
 
             # Responding to client
 
-            clientsocket = key.fileobj
+            client_socket = key.fileobj
             data = key.data
             
             if mask & selectors.EVENT_READ:
@@ -64,21 +72,15 @@ while server_running:
 
             if mask & selectors.EVENT_READ:
 
-                msg = clientsocket.recv(1024)
+                msg = client_socket.recv(1024)
                 print(f"Message received from {data.addr}: {msg.decode('utf-8')}")
 
-                sel.modify(clientsocket, selectors.EVENT_WRITE, data)
+                sel.modify(client_socket, selectors.EVENT_WRITE, data)
                 
             if mask & selectors.EVENT_WRITE:                
 
-                clientsocket.sendall(bytes("Message received", "utf-8"))
+                client_socket.sendall(bytes("Message received", "utf-8"))
                 print(f"Connection ended: {data.addr}") 
 
-                sel.unregister(clientsocket)
-
-# End of server main loop -> exiting server
-
-print("Exiting server...")
-listen_socket.close()
-sel.unregister(listen_socket)
+                sel.unregister(client_socket)
 

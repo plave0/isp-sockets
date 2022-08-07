@@ -10,31 +10,40 @@ SERVER_PORT = int(sys.argv[2])
 
 # Initialize socket to server
 
-s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-s.setblocking(False)
-s.connect_ex((SERVER_ADDR, SERVER_PORT))
+server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+server_socket.setblocking(False)
+server_socket.connect_ex((SERVER_ADDR, SERVER_PORT))
 
 # Initialize selector
 
 sel = selectors.DefaultSelector()
-sel.register(s, selectors.EVENT_WRITE, None)
+sel.register(server_socket, selectors.EVENT_WRITE, None)
 
 # Main client loop
 
-conn_ended = False
-while not conn_ended:
+client_running = True
+while client_running:
 
     # Waiting for an event or terminate client
     try:
+
         events = sel.select(timeout=None) 
+
     except KeyboardInterrupt:
-        conn_ended = True
+        
+        print("Exiting client...")
+
+        client_running = False
+        
+        sel.unregister(server_socket)
+        server_socket.close()
+
         continue
     
     # When event is registered
     for key, mask in events:
         
-        serversocket = key.fileobj
+        server_socket = key.fileobj
 
         if mask & selectors.EVENT_READ:
             print("Server socket is ready to read")
@@ -44,17 +53,17 @@ while not conn_ended:
         if mask & selectors.EVENT_WRITE:  
 
             msg = input()
-            serversocket.sendall(bytes(msg, "utf-8"))
+            server_socket.sendall(bytes(msg, "utf-8"))
 
-            sel.modify(serversocket, selectors.EVENT_READ, None)
+            sel.modify(server_socket, selectors.EVENT_READ, None)
 
         if mask & selectors.EVENT_READ:
 
-            server_msg = serversocket.recv(1024)
+            server_msg = server_socket.recv(1024)
             print(f"Server message: {server_msg.decode('utf-8')}")
 
-            sel.unregister(serversocket)
-            serversocket.close()
+            sel.unregister(server_socket)
+            server_socket.close()
 
-            conn_ended = True
+            client_running = False
 
