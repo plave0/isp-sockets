@@ -13,6 +13,7 @@ listen_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 listen_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 
 listen_socket.bind((LISTEN_ADDR, LISTEN_PORT))
+listen_socket.listen()
 
 # Main server loop
 
@@ -21,7 +22,6 @@ while server_running:
 
     try:
 
-        listen_socket.listen()
         client_socket, address = listen_socket.accept()
 
     except KeyboardInterrupt:
