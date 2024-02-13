@@ -1,10 +1,9 @@
-# Vežbe - Računarske mreže
+# 🛜 Programiranje računarskih mreža
 
-> **Note**
-> 
-> All instructions and materials are written in Serbian.
+> [!NOTE]
+> All instructions and materials are written in **Serbian 🇷🇸**.
 
-## Zadaci sa radionice
+## Zadaci sa radionice ✏️
 
 1.zadatak: Napisati TCP server i TCP klijenta sa sledećim funkcionalnostima:
  - TCP server: Prima konekcije sve dok ne prekinemo izvršavanje programa. Kada primi konekciju od strane nekog klijenta, šalje mu poruku, a zatim zatvara konekciju.
